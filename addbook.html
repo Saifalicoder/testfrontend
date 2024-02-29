@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addbook</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-expand bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Engi <div class="badge text-bg-warning">Books</div></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              </li>
+           
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="logoutLink">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+   
+      <div class="alert alert-warning alert-dismissible fade show" role="alert"  style="display: none;" id="loginAlert">
+        You are not logged in. <a href="login.html" class="login">Login here</a> Please log in to view books.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div class="container">
+       
+        <h1>Add Book</h1>
+    
+        <form id="addBookForm">
+          <div class="form-group">
+            <label for="bookName">Book Name</label>
+            <input type="text" class="form-control" id="bookName" name="book_name" required>
+          </div>
+          <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" class="form-control" id="author" name="author" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" id="price" name="price" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Book</button>
+        </form>
+      </div>
+    
+      <!-- Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+      <!-- Add Book Script -->
+      <script>
+        const accessToken = localStorage.getItem('accessToken');
+        document.getElementById('addBookForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          
+          const formData = new FormData(this);
+          const bookData = {};
+          formData.forEach((value, key) => {
+            bookData[key] = value;
+          });
+    
+          // Assuming you have an API endpoint to add a book
+          fetch('https://engimode.pythonanywhere.com/api/add-book/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              // You can include authorization headers if needed
+              'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(bookData)
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to add book');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Book added successfully:', data);
+            window.location.href = '/index.html';
+            // Optionally, you can redirect the user to a different page or display a success message
+          })
+          .catch(error => {
+            console.error('Error adding book:', error);
+            // Handle error
+          });
+        });
+      </script>
+
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function(event) {
+      event.preventDefault();
+      // Clear the access token from localStorage
+      localStorage.removeItem('accessToken');
+      console.log('Logged out successfully');
+      // Redirect to the login page or any other appropriate page
+      window.location.href = '/login.html'; // Replace with your login page URL
+    });
+</script>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</html>

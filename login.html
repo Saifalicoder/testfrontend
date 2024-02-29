@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-expand bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Engi <div class="badge text-bg-warning">Books</div></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              </li>
+             
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert"  style="display: none;" id="loginAlert">
+       Incorrect Credentials.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <div id="dataContainer" class="row "></div>
+
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Email</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+      <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+           
+          const formData = new FormData(this);
+          const formDataObject = {};
+for (const [key, value] of formData.entries()) {
+    formDataObject[key] = value;
+}
+console.log(JSON.stringify(formDataObject));
+          fetch('https://engimode.pythonanywhere.com/api/users/login/', {
+            method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataObject)
+          })
+          .then(response => {
+            if (!response.ok) {
+            document.getElementById('loginAlert').style.display = 'block';
+              throw new Error('Login failed');
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Assuming the response contains an access token
+            console.log(data);
+            const accessToken = data.access;
+            // Store the access token securely, e.g., in localStorage
+            localStorage.setItem('accessToken', accessToken);
+            console.log('Login successful. Access token:', accessToken);
+            // Redirect to another page or perform further actions as needed
+
+            window.location.href = '/index.html';
+          })
+          .catch(error => {
+            document.getElementById('loginAlert').style.display = 'block';
+            console.error('Error during login:', error);
+            // Handle login failure, display error message, etc.
+          });
+        });
+      </script>
+
+</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</html>
