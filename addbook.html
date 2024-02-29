@@ -61,6 +61,11 @@
       <!-- Add Book Script -->
       <script>
         const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+      // Show alert if user is not logged in
+     
+      window.location.href = 'https://saifalicoder.github.io/testfrontend/login.html';
+    }
         document.getElementById('addBookForm').addEventListener('submit', function(event) {
           event.preventDefault();
           
@@ -105,7 +110,7 @@
       localStorage.removeItem('accessToken');
       console.log('Logged out successfully');
       // Redirect to the login page or any other appropriate page
-      window.location.href = 'https://saifalicoder.github.io/testfrontend/login.html'; // Replace with your login page URL
+      window.location.href = 'login.html'; // Replace with your login page URL
     });
 </script>
 
